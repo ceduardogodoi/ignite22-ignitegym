@@ -53,6 +53,8 @@ export function SignUp() {
         password,
       })
     })
+      .then(response => response.json())
+      .then(console.log);
   }
 
   return (

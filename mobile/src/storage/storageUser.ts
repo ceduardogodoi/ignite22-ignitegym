@@ -10,3 +10,7 @@ export async function storageUserGet(): Promise<UserDTO> {
   const storage = await AsyncStorage.getItem(USER_STORAGE);
   return storage ? JSON.parse(storage) : {};
 }
+
+export async function storageUserRemove() {
+  await AsyncStorage.removeItem(USER_STORAGE);
+}

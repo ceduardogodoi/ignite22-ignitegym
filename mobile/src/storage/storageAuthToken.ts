@@ -8,3 +8,7 @@ export async function storageAuthTokenSave(token: string) {
 export async function storageAuthTokenGet() {
   return AsyncStorage.getItem(AUTH_TOKEN_STORAGE);
 }
+
+export async function storageAuthTokenRemove() {
+  return AsyncStorage.removeItem(AUTH_TOKEN_STORAGE);
+}

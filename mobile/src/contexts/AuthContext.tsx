@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
 import { api } from '@services/api';
-import { storageAuthTokenGet, storageAuthTokenSave } from '@storage/storageAuthToken';
+import { storageAuthTokenGet, storageAuthTokenRemove, storageAuthTokenSave } from '@storage/storageAuthToken';
 import { storageUserSave, storageUserGet, storageUserRemove } from '@storage/storageUser';
 import { UserDTO } from '@dtos/UserDTO';
 
@@ -49,8 +49,10 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
   async function signOut() {
     setIsLoadingUserStorageData(true);
+
     setUser({} as UserDTO);
     await storageUserRemove();
+    await storageAuthTokenRemove();
 
     setIsLoadingUserStorageData(false);
   }

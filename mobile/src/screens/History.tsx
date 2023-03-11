@@ -4,6 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { ScreenHeader } from '@components/ScreenHeader';
 import { HistoryCard } from '@components/HistoryCard';
 import { api } from '@services/api';
+import { HistoryByDayDTO } from '@dtos/HistoryByDayDTO';
 import { AppError } from '@utils/AppError';
 
 function EmptyList() {
@@ -16,16 +17,7 @@ function EmptyList() {
 }
 
 export function History() {
-  const [exercises, setExercises] = useState([
-    {
-      title: '26.08.22',
-      data: ['Puxada frontal', 'Remada unilateral'],
-    },
-    {
-      title: '27.08.22',
-      data: ['Puxada frontal'],
-    },
-  ]);
+  const [exercises, setExercises] = useState<HistoryByDayDTO[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const toast = useToast();
@@ -35,7 +27,7 @@ export function History() {
       setIsLoading(true);
 
       const response = await api.get('/history');
-      console.log(response.data[0]);
+      setExercises(response.data);
     } catch (error) {
       const isAppError = error instanceof AppError;
       const title = isAppError ? error.message : 'Não foi possível carregar o histórico.'
@@ -59,7 +51,7 @@ export function History() {
 
       <SectionList
         sections={exercises}
-        keyExtractor={item => item}
+        keyExtractor={item => item.id}
         renderSectionHeader={({ section }) => (
           <Heading color="gray.200" fontSize="md" mt={10} mb={3} fontFamily="heading">{section.title}</Heading>
         )}

@@ -55,9 +55,7 @@ export function History() {
         renderSectionHeader={({ section }) => (
           <Heading color="gray.200" fontSize="md" mt={10} mb={3} fontFamily="heading">{section.title}</Heading>
         )}
-        renderItem={({ item }) => (
-          <HistoryCard />
-        )}
+        renderItem={({ item }) => <HistoryCard data={item} />}
         ListEmptyComponent={EmptyList}
         px={8}
         contentContainerStyle={!exercises.length && { flex: 1, justifyContent: 'center' }}

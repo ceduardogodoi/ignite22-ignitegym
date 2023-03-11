@@ -3,18 +3,35 @@ import { TouchableOpacity } from 'react-native';
 import { Center, Heading, ScrollView, Skeleton, Text, useToast, VStack } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
+import { Controller, useForm } from 'react-hook-form';
 import { ScreenHeader } from '@components/ScreenHeader';
 import { UserPhoto } from '@components/UserPhoto';
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
+import { useAuth } from '@hooks/useAuth';
 
 const PHOTO_SIZE = 33;
+
+type FormDataProps = {
+  email: string;
+  name: string;
+  password: string;
+  oldPassword: string;
+  confirmPassword: string;
+};
 
 export function Profile() {
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
   const [userPhoto, setUserPhoto] = useState('https://github.com/ceduardogodoi.png');
 
   const toast = useToast();
+  const { user } = useAuth();
+  const { control } = useForm<FormDataProps>({
+    defaultValues: {
+      name: user.name,
+      email: user.email,
+    }
+  });
 
   async function handleUserPhotoSelect() {
     setPhotoIsLoading(true);
@@ -75,14 +92,31 @@ export function Profile() {
             </Text>
           </TouchableOpacity>
 
-          <Input
-            placeholder="Nome"
-            bg="gray.600"
+          <Controller
+            control={control}
+            name="name"
+            render={({ field: { value, onChange } }) => (
+              <Input
+                placeholder='Nome'
+                bg="gray.600"
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
           />
-          <Input
-            placeholder='E-mail'
-            bg="gray.600"
-            isDisabled
+
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { value, onChange } }) => (
+              <Input
+                placeholder='E-mail'
+                bg="gray.600"
+                isDisabled
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
           />
 
           <Heading

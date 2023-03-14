@@ -4,6 +4,8 @@ import { Center, Heading, ScrollView, Skeleton, Text, useToast, VStack } from 'n
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import { ScreenHeader } from '@components/ScreenHeader';
 import { UserPhoto } from '@components/UserPhoto';
 import { Input } from '@components/Input';
@@ -20,17 +22,22 @@ type FormDataProps = {
   confirmPassword: string;
 };
 
+const profileSchema = yup.object({
+  name: yup.string().required('Informe o nome.'),
+})
+
 export function Profile() {
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
   const [userPhoto, setUserPhoto] = useState('https://github.com/ceduardogodoi.png');
 
   const toast = useToast();
   const { user } = useAuth();
-  const { control, handleSubmit } = useForm<FormDataProps>({
+  const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
     defaultValues: {
       name: user.name,
       email: user.email,
-    }
+    },
+    resolver: yupResolver(profileSchema),
   });
 
   async function handleUserPhotoSelect() {
@@ -105,6 +112,7 @@ export function Profile() {
                 bg="gray.600"
                 onChangeText={onChange}
                 value={value}
+                errorMessage={errors.name?.message}
               />
             )}
           />
@@ -156,6 +164,7 @@ export function Profile() {
                 bg="gray.600"
                 secureTextEntry
                 onChangeText={onChange}
+                errorMessage={errors.password?.message}
               />
             )}
           />
@@ -169,6 +178,7 @@ export function Profile() {
                 bg="gray.600"
                 secureTextEntry
                 onChangeText={onChange}
+                errorMessage={errors.confirmPassword?.message}
               />
             )}
           />

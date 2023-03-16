@@ -37,15 +37,18 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   }
 
   async function signIn(email: string, password: string) {
-    setIsLoadingUserStorageData(true);
-
-    const { data } = await api.post('/sessions', { email, password });
-    if (data.user && data.token) {
-      await storageUserAndTokenSave(data.user, data.token);
-      userAndTokenUpdate(data.user, data.token);
+    try {
+      setIsLoadingUserStorageData(true);
+  
+      const { data } = await api.post('/sessions', { email, password });
+      if (data.user && data.token) {
+        await storageUserAndTokenSave(data.user, data.token);
+        userAndTokenUpdate(data.user, data.token);
+      }
+    } finally {
+      setIsLoadingUserStorageData(false);
     }
 
-    setIsLoadingUserStorageData(false);
   }
 
   async function signOut() {

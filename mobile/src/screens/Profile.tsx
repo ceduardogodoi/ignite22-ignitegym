@@ -13,6 +13,7 @@ import { Button } from '@components/Button';
 import { api } from '@services/api';
 import { AppError } from '@utils/AppError';
 import { useAuth } from '@hooks/useAuth';
+import defaultUserPhotoImg from '@assets/userPhotoDefault.png'
 
 const PHOTO_SIZE = 33;
 
@@ -57,7 +58,6 @@ const profileSchema = yup.object({
 export function Profile() {
   const [isUpdating, setUpdating] = useState(false);
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
-  const [userPhoto, setUserPhoto] = useState('https://github.com/ceduardogodoi.png');
 
   const toast = useToast();
   const { user, updateUserProfile } = useAuth();
@@ -173,7 +173,10 @@ export function Profile() {
             />
           ) : (
             <UserPhoto
-              source={{ uri: userPhoto }}
+              source={user.avatar ?
+                { uri: `${api.defaults.baseURL}/avatar/${user.avatar}` } :
+                defaultUserPhotoImg
+              }
               alt="Foto do usuário"
               size={PHOTO_SIZE}
             />

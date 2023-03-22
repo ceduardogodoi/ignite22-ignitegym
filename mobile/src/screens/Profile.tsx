@@ -109,8 +109,6 @@ export function Profile() {
           userUpdated.avatar = avatarUpdatedResponse.data.avatar;
           updateUserProfile(userUpdated);
 
-          console.log(userUpdated);
-
           toast.show({
             title: 'Foto atualizada.',
             placement: 'top',

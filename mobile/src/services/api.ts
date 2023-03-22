@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 import { AppError } from '@utils/AppError';
 
 type SignOut = () => void;
@@ -12,12 +12,23 @@ export const api = axios.create({
 }) as APIInstanceProps;
 
 api.registerInterceptTokenManager = signOut => {
-  const interceptTokenManager = api.interceptors.response.use(response => response, error => {
-    if (error.response?.data) {
-      return Promise.reject(new AppError(error.response.data.message));
+  const interceptTokenManager = api.interceptors.response.use(response => response, (requestError: AxiosError<{ message: string }>) => {
+    if (requestError?.response?.status === 401) {
+      if (
+        requestError.response.data?.message === 'token.expired' ||
+        requestError.response.data?.message === 'token.invalid'
+      ) {
+        // TODO: próxima aula
+      }
+
+      signOut();
     }
 
-    return Promise.reject(error);
+    if (requestError.response?.data) {
+      return Promise.reject(new AppError(requestError.response.data.message));
+    }
+
+    return Promise.reject(requestError);
   });
 
   return () => {

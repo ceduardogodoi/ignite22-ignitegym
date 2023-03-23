@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react';
 import { Heading, SectionList, Text, useToast, VStack } from 'native-base';
 import { useFocusEffect } from '@react-navigation/native';
-import { ScreenHeader } from '@components/ScreenHeader';
+import { Loading } from '@components/Loading';
 import { HistoryCard } from '@components/HistoryCard';
+import { ScreenHeader } from '@components/ScreenHeader';
 import { api } from '@services/api';
 import { HistoryByDayDTO } from '@dtos/HistoryByDayDTO';
 import { AppError } from '@utils/AppError';
@@ -49,17 +50,23 @@ export function History() {
     <VStack flex={1}>
       <ScreenHeader title="Histórico de Exercícios" />
 
-      <SectionList
-        sections={exercises}
-        keyExtractor={item => item.id}
-        renderSectionHeader={({ section }) => (
-          <Heading color="gray.200" fontSize="md" mt={10} mb={3} fontFamily="heading">{section.title}</Heading>
-        )}
-        renderItem={({ item }) => <HistoryCard data={item} />}
-        ListEmptyComponent={EmptyList}
-        px={8}
-        contentContainerStyle={!exercises.length && { flex: 1, justifyContent: 'center' }}
-      />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <SectionList
+          sections={exercises}
+          keyExtractor={item => item.id}
+          renderSectionHeader={({ section }) => (
+            <Heading color="gray.200" fontSize="md" mt={10} mb={3} fontFamily="heading">
+              {section.title}
+            </Heading>
+          )}
+          renderItem={({ item }) => <HistoryCard data={item} />}
+          ListEmptyComponent={EmptyList}
+          px={8}
+          contentContainerStyle={!exercises.length && { flex: 1, justifyContent: 'center' }}
+        />
+      )}
     </VStack>
   );
 }

@@ -22,7 +22,12 @@ export function SignIn() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
   const toast = useToast();
 
-  const { control, handleSubmit, formState: { errors } } = useForm<FormData>()
+  const { control, handleSubmit, formState: { errors } } = useForm<FormData>({
+    defaultValues: {
+      email: 'rodrigo@email.com',
+      password: '123',
+    },
+  })
 
   function handleNewAccount() {
     navigation.navigate('signUp');
